@@ -13,11 +13,6 @@ class DAO(override val driver: MyPostgresDriver) extends OsmWaysComponent {
   import driver.simple._
 
   val osmWays = TableQuery(new OsmWays(_)) // Important for Slick to find the Tables 
-  
-  // Important to be able to use the unicorn methods
-  class WaysRepository extends BaseIdRepository[WayId, OsmWay, OsmWays](TableQuery[OsmWays])
-  object WaysRepository extends WaysRepository
-
 }
 
 object current {
