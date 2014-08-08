@@ -3,7 +3,7 @@
 
 # --- !Ups
 
-create table "WAYS" ("id" INTEGER NOT NULL,"line" geometry NOT NULL);
+create table "WAYS" ("id" BIGSERIAL NOT NULL PRIMARY KEY,"line" geometry NOT NULL);
 
 # --- !Downs
 

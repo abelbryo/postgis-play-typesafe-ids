@@ -13,10 +13,10 @@ import com.vividsolutions.jts.geom._
 import com.vividsolutions.jts.geom.impl._
 
 //stable imports to use play.api.Play.current outside of objects:
-import repository.current.dao._
+import models.current.dao._
 // import repository.current.dao.driver.simple._
 // import repository.current.dao.driver.simple.{Session => MyDBSession }
-
+import repository.QueryMethods._
 
 object Application extends Controller {
 
@@ -28,24 +28,15 @@ object Application extends Controller {
 
   def insert = Action { implicit rs =>
 
-    DB.withSession {
-    
-      implicit session: MyS => 
+        val carr: Array[Coordinate] = Array(new Coordinate(10, 10), new Coordinate(20, 20), new Coordinate(40, 40))
+        val cs = new CoordinateArraySequence(carr)
 
-      val repo = new WaysRepository
-      repo.create
+        val gf = new GeometryFactory(new PrecisionModel(), 4326)
 
-      val carr: Array[Coordinate] = Array(new Coordinate(10, 10), new Coordinate(20, 20), new Coordinate(40, 40))
-      val cs = new CoordinateArraySequence(carr)
+        val line = new LineString(cs, gf)
+        val way = OsmWay(None, line)
+        val wayId: WayId = create(way)
 
-      val gf = new GeometryFactory(new PrecisionModel(), 4326)
-
-      val line = new LineString(cs, gf)
-      val way = OsmWay(None, line )
-
-      val wayId = repo save way
-
-    }
 
    Redirect(routes.Application.index)
   }

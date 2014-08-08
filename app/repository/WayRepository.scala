@@ -1,24 +1,26 @@
 package repository
 
+import com.vividsolutions.jts.geom._
+import com.vividsolutions.jts.geom.impl._
+
 import models._
-import org.virtuslab.unicorn.UnicornPlay._
-import org.virtuslab.unicorn.UnicornPlay.driver.simple._
+import models.current.dao.WaysRepository
 
-import play.api.db.slick.DB
 import play.api.db.slick._
+import play.api.Play.current
 
-import play.api.db.slick.Database._
-import myUtils.MyPostgresDriver
+object QueryMethods {
 
-class DAO(override val driver: MyPostgresDriver) extends OsmWaysComponent {
-  import driver.simple._
+  def create(row: OsmWay) = {
+    DB.withSession {
 
-  class WaysRepository extends BaseIdRepository[WayId, OsmWay, OsmWays](TableQuery[OsmWays])
-  //   val osmWays = TableQuery(new OsmWays(_))
+      implicit session: Session =>
+
+        // repo.create
+
+        WaysRepository save row
+
+    }
+  }
 
 }
-
-object current {
-  val dao = new DAO(DB(play.api.Play.current).driver.asInstanceOf[MyPostgresDriver])
-}
-
