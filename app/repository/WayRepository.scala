@@ -21,7 +21,7 @@ object WaysRepository extends WaysRepository {
 
       implicit session: Session =>
 
-        // check if the table exists or not 
+        // check if the table exists
         if (MTable.getTables("WAYS").list(session).isEmpty) super.create
 
         WaysRepository save row
