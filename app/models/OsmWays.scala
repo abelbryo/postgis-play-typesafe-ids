@@ -1,9 +1,7 @@
 package models
 
-import com.vividsolutions.jts.geom.Point
 import com.vividsolutions.jts.geom.LineString
 import org.joda.time.LocalDateTime
-import play.api.libs.json.JsValue
 import myUtils.WithMyDriver
 
 import org.virtuslab.unicorn.UnicornPlay._
@@ -26,6 +24,12 @@ trait OsmWaysComponent extends WithMyDriver {
     def line = column[LineString]("line")
 
     def * = (id.?, line) <> (OsmWay.tupled, OsmWay.unapply)
+
   }
+
 }
 
+object OsmWaysComponent extends OsmWaysComponent {
+  val osmWays = TableQuery[OsmWays]
+  override val driver = myUtils.MyPostgresDriver
+}

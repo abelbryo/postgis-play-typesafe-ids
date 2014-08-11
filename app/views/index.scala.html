@@ -1,4 +1,4 @@
-@(osmWays: List[OsmWay])
+@(osmWays: List[OsmWay], users: List[User])
 
 @main("osm way database") {
 <h2>Insert a osm way here:</h2>
@@ -9,10 +9,19 @@
 </form>
 
 <h2>Previously inserted osm way:</h2>
+    <h3>Path</h3>
     <table>
         <tr><th>Location</th><th>Id</th></tr>
         @for(c <- osmWays){
             <tr><td>@c.line</td><td>@c.id</td></tr>
+        }
+    <table/>
+
+        <h3>Users and Paths</h3>
+    <table>
+        <tr><th>Location</th><th>Way Id</th> <th>UserId</th> </tr>
+        @for(c <- users){
+            <tr><td>@c.name</td><td>@c.wayId</td> <td>@c.id</td></tr>
         }
     <table/>
 

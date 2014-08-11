@@ -16,24 +16,16 @@ class WaysRepository extends BaseIdRepository[WayId, OsmWay, OsmWays](TableQuery
 
 object WaysRepository extends WaysRepository {
 
-  def create(row: OsmWay) = {
-    DB.withSession {
-
+  def create(row: OsmWay) = DB.withSession {
       implicit session: Session =>
-
         // check if the table exists
         if (MTable.getTables("WAYS").list(session).isEmpty) super.create
-
         WaysRepository save row
-
-    }
   }
 
-  def getAllPaths: Seq[OsmWay] = {
-    DB.withSession {
+  def getAllPaths: Seq[OsmWay] = DB.withSession {
       implicit session: Session =>
         this.findAll
     }
-  }
 
 }
