@@ -20,8 +20,9 @@ object Application extends Controller {
   def index = Action { implicit rs =>
     val allPaths = WaysRepository.getAllPaths.asInstanceOf[List[OsmWay]]
     val allUsers = UsersRepository.getAllUsers.asInstanceOf[List[User]]
+    val usersById = UsersRepository.getUsersByWayId(WayId(1)).asInstanceOf[List[User]]
 
-    Ok(views.html.index(allPaths, allUsers))
+    Ok(views.html.index(allPaths, allUsers, usersById ))
   }
 
   def insert = Action { implicit rs =>

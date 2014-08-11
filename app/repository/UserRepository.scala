@@ -23,7 +23,17 @@ object UsersRepository extends UsersRepository {
 
   def getAllUsers = DB.withSession {
     implicit session: Session =>
-     this.findAll 
+      this.findAll
   }
 
-}
+  def getUsersByWayId(wid: WayId) = DB.withSession{
+    val result = for {
+      w <- OsmWaysComponent.osmWays
+      u <- UsersComponent.users if u.wayId === wid
+    } yield u
+
+    implicit session: Session =>
+      result.list
+    }
+
+  }
