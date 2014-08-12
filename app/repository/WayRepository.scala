@@ -1,9 +1,9 @@
 package repository
 
 import models._
-import models.current.dao._
+import models.current.dao.OsmWays
 
-import play.api.db.slick._
+import play.api.db.slick.DB
 import play.api.Play.current
 
 import org.virtuslab.unicorn.UnicornPlay._

@@ -1,18 +1,13 @@
 package controllers
 
 import play.api._
-import play.api.data._
-import play.api.data.Forms._
 import play.api.mvc._
-import play.api.db.slick._
 import play.api.Play.current
-import myUtils._
-import models._
+
 import com.vividsolutions.jts.geom._
 import com.vividsolutions.jts.geom.impl._
 
-//stable imports to use play.api.Play.current outside of objects:
-import models.current.dao._
+import models._
 import repository._
 
 object Application extends Controller {
@@ -45,6 +40,15 @@ object Application extends Controller {
     UsersRepository.createNewUser(user3)
 
     Redirect(routes.Application.index)
+  }
+
+  def updateUser = Action { implicit request =>
+    val oldUser = UsersRepository.getUserById(UserId(100))
+    oldUser.map{ old =>
+      val newUser = User(old.id, "Haile Gebresillasie", WayId(2))
+      UsersRepository.updateUser(newUser)
+    }
+    Ok("Done")
   }
 
 }
