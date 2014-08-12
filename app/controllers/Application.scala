@@ -43,7 +43,7 @@ object Application extends Controller {
   }
 
   def updateUser = Action { implicit request =>
-    val oldUser = UsersRepository.getUserById(UserId(100))
+    val oldUser = UsersRepository.getUserById(UserId(1))
     oldUser.map{ old =>
       val newUser = User(old.id, "Haile Gebresillasie", WayId(2))
       UsersRepository.updateUser(newUser)
