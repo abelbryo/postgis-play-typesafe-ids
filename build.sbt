@@ -21,7 +21,6 @@ libraryDependencies ++= Seq(
   "com.github.tminglei" %% "slick-pg_joda-time" % "0.6.0-M2",
   "com.github.tminglei" %% "slick-pg_play-json" % "0.6.0-M2",
   "com.github.tminglei" %% "slick-pg_jts" % "0.6.0-M2",
-  // "org.postgresql" % "postgresql" % "9.3-1100-jdbc41",
   "postgresql" % "postgresql" % "9.1-901-1.jdbc4",
   "joda-time" % "joda-time" % "2.3",
   "org.joda" % "joda-convert" % "1.5",

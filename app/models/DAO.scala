@@ -10,11 +10,14 @@ import myUtils.MyPostgresDriver
 import org.virtuslab.unicorn.UnicornPlay._
 import org.virtuslab.unicorn.UnicornPlay.driver.simple._
 
-class DAO(override val driver: MyPostgresDriver) extends OsmWaysComponent with UsersComponent{
+class DAO(override val driver: MyPostgresDriver) extends OsmWaysComponent
+  with PilesComponent
+  with UsersComponent {
   import driver.simple._
 
   val osmWays = TableQuery(new OsmWays(_)) // Important for Slick to find the Tables
-  val users  = TableQuery(new Users(_))
+  val users = TableQuery(new Users(_))
+  val piles = TableQuery(new Piles(_))
 }
 
 object current {
