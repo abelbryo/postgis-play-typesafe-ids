@@ -1,5 +1,4 @@
-if (window.console) {
-  console.log("Welcome to your Play application's JavaScript!");
+$(function() {
+    // PUT YOU SCRIPTS HERE
 
-
-}
+});

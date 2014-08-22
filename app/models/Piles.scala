@@ -28,7 +28,9 @@ case class Pile(id: Option[PileId],
   luokka: Double,
   aika: Option[ String ],
   teksti: Option[ String ],
-  ownerId: UserId) extends WithId[PileId]
+  ownerId: UserId,
+  fileName: String
+  ) extends WithId[PileId]
 
 trait PilesComponent extends WithMyDriver {
   import driver.simple._
@@ -52,8 +54,10 @@ trait PilesComponent extends WithMyDriver {
     def ownerId = column[UserId]("owner")
     def owner = foreignKey("PILE_OWNER_FK", ownerId, UsersComponent.users)(_.id)
 
+    def fileName = column[String]("ORIG_FILENAME")
+
     def * = (id.?, wkb_geometry, wood_id, tunnus, kunta, alue, lohko, mts, kuvio, alakuvio, pinta_ala,
-      ryhma, luokka, aika, teksti, ownerId) <> (Pile.tupled, Pile.unapply)
+      ryhma, luokka, aika, teksti, ownerId, fileName) <> (Pile.tupled, Pile.unapply)
   }
 
 }

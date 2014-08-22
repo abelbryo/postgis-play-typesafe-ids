@@ -1,4 +1,8 @@
-resolvers += "Typesafe repository" at "http://repo.typesafe.com/typesafe/releases/"
+resolvers ++= Seq(
+  "Typesafe Repository" at "http://repo.typesafe.com/typesafe/releases",
+  "opengeo" at "http://repo.opengeo.org/",
+  "osgeo" at "http://download.osgeo.org/webdav/geotools/"
+)
 
 // The Play plugin
 addSbtPlugin("com.typesafe.play" % "sbt-plugin" % "2.3.2")

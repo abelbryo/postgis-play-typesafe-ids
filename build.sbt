@@ -6,6 +6,12 @@ lazy val root = (project in file(".")).enablePlugins(PlayScala)
 
 scalaVersion := "2.11.1"
 
+resolvers ++= Seq(
+  "Typesafe Repository" at "http://repo.typesafe.com/typesafe/releases",
+  "opengeo" at "http://repo.opengeo.org/",
+  "osgeo" at "http://download.osgeo.org/webdav/geotools/"
+)
+
 libraryDependencies ++= Seq(
   jdbc,
   cache,
@@ -25,5 +31,16 @@ libraryDependencies ++= Seq(
   "joda-time" % "joda-time" % "2.3",
   "org.joda" % "joda-convert" % "1.5",
   "com.vividsolutions" % "jts" % "1.13",
-  "org.virtuslab" %% "unicorn-play" % "0.6.0-M8"
+  "org.virtuslab" %% "unicorn-play" % "0.6.0-M8",
+  // geotools
+  "org.geotools" % "gt-main" % "9.2",
+  "org.geotools" % "gt-process" % "9.2",
+  "org.geotools" % "gt-geometry" % "9.2",
+  "org.geotools" % "gt-geojson" % "9.2",
+  "org.geotools" % "gt-shapefile" % "9.2",
+  "org.geotools" % "gt-epsg-hsql" % "9.2",
+  "org.geotools.jdbc" % "gt-jdbc-postgis" % "9.2",
+  "org.geotools" % "gt-epsg-extension" % "9.2",
+  "org.geotools" % "gt-referencing" % "9.2",
+  "org.gdal" % "gdal" % "1.9.2"
 )

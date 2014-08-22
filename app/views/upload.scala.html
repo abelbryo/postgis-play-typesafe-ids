@@ -1,0 +1,14 @@
+@()
+
+@main("Upload shapefiles"){
+
+    @helper.form(action=routes.WoodPileController.upload, 'enctype -> "multipart/form-data"){
+    <h3>Upload shapefiles below.</h3>
+        
+        <input type="file" multiple name="shapefile" value="Browse" />
+        <p>
+        <button type="submit">Upload</button>
+        </p>
+    }
+
+}
