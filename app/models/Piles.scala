@@ -15,39 +15,62 @@ object PileId extends IdCompanion[PileId]
 
 case class Pile(id: Option[PileId],
   wkb_geometry: Geometry,
-  wood_id: Option[ Long ],
+  wood_id: Option[ String ],
   tunnus: String,
-  kunta: Long,
-  alue: Long,
-  lohko: Long,
-  mts: Double,
-  kuvio: Double,
+  kunta: String,
+  alue: String,
+  lohko: String,
+  mts: String,
+  kuvio: String,
   alakuvio: Option[String],
-  pinta_ala: Double,
-  ryhma: Double,
-  luokka: Double,
+  pinta_ala: String,
+  ryhma: String,
+  luokka: String,
   aika: Option[ String ],
   teksti: Option[ String ],
   ownerId: UserId,
   fileName: String
   ) extends WithId[PileId]
 
+
+///   val pile = Pile (None,
+///     feature.getAttribute(0).asInstanceOf[ Geometry ],
+///     Option(  feature.getAttribute("ID").asInstanceOf[Long] ),
+///     feature.getAttribute("Tunnus").asInstanceOf[String],
+///     feature.getAttribute("Kunta").asInstanceOf[Long],
+///     feature.getAttribute("Alue").asInstanceOf[Long],
+///     feature.getAttribute("Lohko").asInstanceOf[Long],
+///     feature.getAttribute("Mts").asInstanceOf[Long],
+///     feature.getAttribute("Kuvio").asInstanceOf[Long],
+///     Option( feature.getAttribute("Alakuvio").asInstanceOf[String] ),
+///     feature.getAttribute("Pinta_ala").asInstanceOf[Double] ,
+///     feature.getAttribute("Ryhma").asInstanceOf[Long] ,
+///     feature.getAttribute("Luokka").asInstanceOf[Long] ,
+///     Option( feature.getAttribute("Aika").asInstanceOf[String] ),
+///     Option( feature.getAttribute("Teksti").asInstanceOf[String] ),
+///     UserId(1),
+///     file.getName()
+///   )
+
+
+
+
 trait PilesComponent extends WithMyDriver {
   import driver.simple._
 
   class Piles(tag: Tag) extends IdTable[PileId, Pile](tag, "WOODS") {
-    def wkb_geometry = column[Geometry]("wkb_geometry")
-    def wood_id = column[Option[Long]]("wood_id")
+    def wkb_geometry = column[Geometry]("the_geom")
+    def wood_id = column[Option[String]]("wood_id")
     def tunnus = column[String]("tunnus")
-    def kunta = column[Long]("kunta")
-    def alue = column[Long]("alue")
-    def lohko = column[Long]("lohko")
-    def mts = column[Double]("mts")
-    def kuvio = column[Double]("kuvio")
+    def kunta = column[String]("kunta")
+    def alue = column[String]("alue")
+    def lohko = column[String]("lohko")
+    def mts = column[String]("mts")
+    def kuvio = column[String]("kuvio")
     def alakuvio = column[Option[ String ]]("alakuvio")
-    def pinta_ala = column[Double]("pinta_ala")
-    def ryhma = column[Double]("ryhma")
-    def luokka = column[Double]("luokka")
+    def pinta_ala = column[String]("pinta_ala")
+    def ryhma = column[String]("ryhma")
+    def luokka = column[String]("luokka")
     def aika = column[Option[ String ]]("aika")
     def teksti = column[Option[ String ]]("teksti")
 

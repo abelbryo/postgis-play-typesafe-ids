@@ -49,22 +49,21 @@ object WoodPileController extends Controller {
     Redirect(routes.WoodPileController.index).flashing("success" -> "Shapefile uploaded")
   }
 
-  def testShapefile = Action {implicit request => 
+  def testShapefile = Action { implicit request =>
     val dir = new File("/tmp/shapefiles/")
     val list = dir.listFiles()
 
     list map { e =>
       play.Logger.debug("Filename --->  " + e.getName())
-      if ( e.getName() == "polygon.shp"){
+      if (e.getName.endsWith(".shp")){
         readShapeFilesAndInsertIntoDB(e)
       }
     }
 
-
     Ok("Testing ... shapefiles: Watch the console log ")
   }
 
-  def readShapeFilesAndInsertIntoDB(file: File) = {
+  def readShapeFilesAndInsertIntoDB(file: File) {
     val store = new ShapefileDataStore(file.toURI.toURL())
     val typeName = store.getTypeNames()(0)
     val source: SimpleFeatureSource = store.getFeatureSource(typeName)
@@ -72,21 +71,42 @@ object WoodPileController extends Controller {
     val features: SimpleFeatureCollection = source.getFeatures()
     val ft: SimpleFeatureTypeImpl = source.getSchema().asInstanceOf[SimpleFeatureTypeImpl]
 
+    val attrTypeList = for {
+      i <- 0 to ft.getAttributeCount() - 1
+      attrType = ft.getType(i).getName()
+    } yield attrType
+
+    attrTypeList map (println)
+
     val iterator: SimpleFeatureIterator = features.features()
-    while(iterator.hasNext()){
+    while (iterator.hasNext()) {
       val feature: SimpleFeature = iterator.next()
 
-      feature.getAttributes().foreach {
-        e => println(e)
-      }
-    }
+      val pile = Pile (None,
+        feature.getAttribute(0).asInstanceOf[ Geometry ],
+        Option( feature.getAttribute(attrTypeList(1)).toString ),
+                feature.getAttribute(attrTypeList(2)).toString,
+                feature.getAttribute(attrTypeList(3)).toString,
+                feature.getAttribute(attrTypeList(4)).toString,
+                feature.getAttribute(attrTypeList(5)).toString,
+                feature.getAttribute(attrTypeList(6)).toString,
+                feature.getAttribute(attrTypeList(7)).toString,
+        Option( feature.getAttribute(attrTypeList(8)).toString ),
+                feature.getAttribute(attrTypeList(9)).toString ,
+                feature.getAttribute(attrTypeList(10)).toString ,
+                feature.getAttribute(attrTypeList(11)).toString ,
+        Option( feature.getAttribute(attrTypeList(12)).toString ),
+        Option( feature.getAttribute(attrTypeList(13)).toString ),
+        UserId(1),
+        file.getName()
+      )
+
+      PilesRepository.create(pile)
+
+      play.Logger.debug("========= END INSERT ===========")
 
 
-
-
-
-    store
-
+    } // end while
   }
 
   def updateUser = Action { implicit request =>
