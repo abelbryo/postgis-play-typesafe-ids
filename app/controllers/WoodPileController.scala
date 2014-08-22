@@ -50,9 +50,7 @@ object WoodPileController extends Controller {
   }
 
   def testShapefile = Action { implicit request =>
-    val dir = new File("/tmp/shapefiles/")
-    val list = dir.listFiles()
-
+    val list = new File("/tmp/shapefiles/").listFiles()
     list map { e =>
       play.Logger.debug("Filename --->  " + e.getName())
       if (e.getName.endsWith(".shp")){
@@ -63,7 +61,7 @@ object WoodPileController extends Controller {
     Ok("Testing ... shapefiles: Watch the console log ")
   }
 
-  def readShapeFilesAndInsertIntoDB(file: File) {
+  private def readShapeFilesAndInsertIntoDB(file: File) {
     val store = new ShapefileDataStore(file.toURI.toURL())
     val typeName = store.getTypeNames()(0)
     val source: SimpleFeatureSource = store.getFeatureSource(typeName)
@@ -71,12 +69,12 @@ object WoodPileController extends Controller {
     val features: SimpleFeatureCollection = source.getFeatures()
     val ft: SimpleFeatureTypeImpl = source.getSchema().asInstanceOf[SimpleFeatureTypeImpl]
 
-    val attrTypeList = for {
+    val attrNameList = for {
       i <- 0 to ft.getAttributeCount() - 1
       attrType = ft.getType(i).getName()
     } yield attrType
 
-    attrTypeList map (println)
+    attrNameList map (println)
 
     val iterator: SimpleFeatureIterator = features.features()
     while (iterator.hasNext()) {
@@ -84,19 +82,19 @@ object WoodPileController extends Controller {
 
       val pile = Pile (None,
         feature.getAttribute(0).asInstanceOf[ Geometry ],
-        Option( feature.getAttribute(attrTypeList(1)).toString ),
-                feature.getAttribute(attrTypeList(2)).toString,
-                feature.getAttribute(attrTypeList(3)).toString,
-                feature.getAttribute(attrTypeList(4)).toString,
-                feature.getAttribute(attrTypeList(5)).toString,
-                feature.getAttribute(attrTypeList(6)).toString,
-                feature.getAttribute(attrTypeList(7)).toString,
-        Option( feature.getAttribute(attrTypeList(8)).toString ),
-                feature.getAttribute(attrTypeList(9)).toString ,
-                feature.getAttribute(attrTypeList(10)).toString ,
-                feature.getAttribute(attrTypeList(11)).toString ,
-        Option( feature.getAttribute(attrTypeList(12)).toString ),
-        Option( feature.getAttribute(attrTypeList(13)).toString ),
+        Option( feature.getAttribute(attrNameList(1)).toString ),
+                feature.getAttribute(attrNameList(2)).toString,
+                feature.getAttribute(attrNameList(3)).toString,
+                feature.getAttribute(attrNameList(4)).toString,
+                feature.getAttribute(attrNameList(5)).toString,
+                feature.getAttribute(attrNameList(6)).toString,
+                feature.getAttribute(attrNameList(7)).toString,
+        Option( feature.getAttribute(attrNameList(8)).toString ),
+                feature.getAttribute(attrNameList(9)).toString ,
+                feature.getAttribute(attrNameList(10)).toString ,
+                feature.getAttribute(attrNameList(11)).toString ,
+        Option( feature.getAttribute(attrNameList(12)).toString ),
+        Option( feature.getAttribute(attrNameList(13)).toString ),
         UserId(1),
         file.getName()
       )
@@ -107,6 +105,7 @@ object WoodPileController extends Controller {
 
 
     } // end while
+    iterator.close()
   }
 
   def updateUser = Action { implicit request =>

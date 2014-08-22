@@ -28,4 +28,8 @@ object PilesRepository extends PilesRepository {
         this.findAll
     }
 
+  def getPileById(id: PileId): Option[Pile] = DB.withSession{
+    implicit session: Session =>
+      this.findById(id)
+  }
 }
