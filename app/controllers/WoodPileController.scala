@@ -8,8 +8,8 @@ import play.api.libs.json._
 import models._
 import repository._
 
-import java.io._
-import java.util.{List => JList, Map => JMap}
+import java.io.File
+import java.util.{ List => JList, Map => JMap }
 
 import org.geotools.data.DataStore
 import org.geotools.data.shapefile.ShapefileDataStore
@@ -33,17 +33,35 @@ object WoodPileController extends Controller {
     Ok(views.html.upload())
   }
 
-  def geomAsGeoJSON(id: Long) = Action{
+  def geomAsGeoJSON(id: Long) = Action {
     implicit request =>
       val pileJSON = PilesRepository.asGeoJSON(PileId(id)).getOrElse("{response: 404}")
       Ok(pileJSON).as("application/json")
   }
 
-  def geomByOwerIdAsGeoJSON(ownerId: Long) = Action{
+  def geomByOwerIdAsGeoJSON(ownerId: Long) = Action {
     implicit request =>
       val pileJSON = PilesRepository.geomByOwnerId(UserId(ownerId))
       val json = Json.toJson(pileJSON)
       Ok(json)
+  }
+
+  def pileDataAsGeoJSON(id: Long) = Action {
+    implicit request =>
+      val geometry = PilesRepository.asGeoJSON(PileId(id)).getOrElse("{response: 404}")
+      val pile = PilesRepository.getPileById(PileId(id))
+
+      val properties = pile match {
+        case None => Json.obj("response" -> 404)
+        case _ => pile.get.toJSON
+      }
+
+      val geojson = Json.obj("type" -> "Feature",
+        "geometry" -> geometry,
+        "properties" -> properties)
+
+      Ok(geojson)
+    // Ok(views.html.pileview(properties, pileJSON))
   }
 
   def upload = Action(parse.multipartFormData) { implicit request =>
@@ -67,11 +85,10 @@ object WoodPileController extends Controller {
     val list = new File("/tmp/shapefiles/").listFiles()
     list map { e =>
       play.Logger.debug("Filename --->  " + e.getName())
-      if (e.getName.endsWith(".shp")){
+      if (e.getName.endsWith(".shp")) {
         readShapeFilesAndInsertIntoDB(e)
       }
     }
-
     Ok("Testing ... shapefiles: Watch the console log ")
   }
 
@@ -94,29 +111,27 @@ object WoodPileController extends Controller {
     while (iterator.hasNext()) {
       val feature: SimpleFeature = iterator.next()
 
-      val pile = Pile (None,
-        feature.getAttribute(0).asInstanceOf[ Geometry ],
-        Option( feature.getAttribute(attrNameList(1)).toString ),
-                feature.getAttribute(attrNameList(2)).toString,
-                feature.getAttribute(attrNameList(3)).toString,
-                feature.getAttribute(attrNameList(4)).toString,
-                feature.getAttribute(attrNameList(5)).toString,
-                feature.getAttribute(attrNameList(6)).toString,
-                feature.getAttribute(attrNameList(7)).toString,
-        Option( feature.getAttribute(attrNameList(8)).toString ),
-                feature.getAttribute(attrNameList(9)).toString ,
-                feature.getAttribute(attrNameList(10)).toString ,
-                feature.getAttribute(attrNameList(11)).toString ,
-        Option( feature.getAttribute(attrNameList(12)).toString ),
-        Option( feature.getAttribute(attrNameList(13)).toString ),
+      val pile = Pile(None,
+        feature.getAttribute(0).asInstanceOf[Geometry],
+        Option(feature.getAttribute(attrNameList(1)).toString),
+        feature.getAttribute(attrNameList(2)).toString,
+        feature.getAttribute(attrNameList(3)).toString,
+        feature.getAttribute(attrNameList(4)).toString,
+        feature.getAttribute(attrNameList(5)).toString,
+        feature.getAttribute(attrNameList(6)).toString,
+        feature.getAttribute(attrNameList(7)).toString,
+        Option(feature.getAttribute(attrNameList(8)).toString),
+        feature.getAttribute(attrNameList(9)).toString,
+        feature.getAttribute(attrNameList(10)).toString,
+        feature.getAttribute(attrNameList(11)).toString,
+        Option(feature.getAttribute(attrNameList(12)).toString),
+        Option(feature.getAttribute(attrNameList(13)).toString),
         UserId(1),
-        file.getName()
-      )
+        file.getName())
 
       PilesRepository.create(pile)
 
       play.Logger.debug("========= END INSERT ===========")
-
 
     } // end while
     iterator.close()

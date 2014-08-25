@@ -1,5 +1,7 @@
 package models
 
+import play.api.libs.json._
+
 import com.vividsolutions.jts.geom._
 import org.joda.time.LocalDateTime
 
@@ -29,7 +31,28 @@ case class Pile(id: Option[PileId],
   aika: Option[String],
   teksti: Option[String],
   ownerId: UserId,
-  fileName: String) extends WithId[PileId]
+  fileName: String) extends WithId[PileId] {
+
+    // This method intentionally ignores the geometry
+    def toJSON() = Json.obj (
+      "wood_id" -> wood_id,
+      "tunnus" -> tunnus,
+      "kunta" -> kunta,
+      "alue" -> alue,
+      "lohko" -> lohko,
+      "mts" -> mts,
+      "kuvio" -> kuvio,
+      "alakuvio" -> alakuvio,
+      "pinta_ala" -> pinta_ala,
+      "ryhma" -> ryhma,
+      "luokka" -> luokka,
+      "aika" -> aika,
+      "teksti" -> teksti,
+      "ownerId" -> ownerId.id,
+      "fileName" -> fileName
+    )
+
+}
 
 ///   val pile = Pile (None,
 ///     feature.getAttribute(0).asInstanceOf[ Geometry ],

@@ -57,4 +57,10 @@ object PilesRepository extends PilesRepository {
       query.list
   }
 
+  def __geomByOwnerIdTesting(userId: UserId)  = DB.withSession{
+    implicit session: Session =>
+      val query = piles.filter(_.ownerId === userId).map(e => ( e.geometry.asGeoJSON(), e.wood_id, e.tunnus  ))
+      query.list
+  }
+
 }
