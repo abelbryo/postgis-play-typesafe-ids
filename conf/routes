@@ -13,6 +13,8 @@ GET    /pile/index                 controllers.WoodPileController.index
 POST   /pile/upload                controllers.WoodPileController.upload
 
 GET    /pile/test                  controllers.WoodPileController.testShapefile
+GET    /pile/api/:id               controllers.WoodPileController.geomAsGeoJSON(id: Long)
+GET    /pile/api/owner/:id         controllers.WoodPileController.geomByOwerIdAsGeoJSON(id: Long)
 
 
 # Map static resources from the /public folder to the /assets URL path

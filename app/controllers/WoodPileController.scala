@@ -3,12 +3,13 @@ package controllers
 import play.api._
 import play.api.mvc._
 import play.api.Play.current
+import play.api.libs.json._
 
 import models._
 import repository._
 
 import java.io._
-import java.util._
+import java.util.{List => JList, Map => JMap}
 
 import org.geotools.data.DataStore
 import org.geotools.data.shapefile.ShapefileDataStore
@@ -30,6 +31,19 @@ object WoodPileController extends Controller {
 
   def index = Action { implicit rs =>
     Ok(views.html.upload())
+  }
+
+  def geomAsGeoJSON(id: Long) = Action{
+    implicit request =>
+      val pileJSON = PilesRepository.asGeoJSON(PileId(id)).getOrElse("{response: 404}")
+      Ok(pileJSON).as("application/json")
+  }
+
+  def geomByOwerIdAsGeoJSON(ownerId: Long) = Action{
+    implicit request =>
+      val pileJSON = PilesRepository.geomByOwnerId(UserId(ownerId))
+      val json = Json.toJson(pileJSON)
+      Ok(json)
   }
 
   def upload = Action(parse.multipartFormData) { implicit request =>

@@ -14,8 +14,8 @@ case class PileId(id: Long) extends AnyVal with BaseId
 object PileId extends IdCompanion[PileId]
 
 case class Pile(id: Option[PileId],
-  wkb_geometry: Geometry,
-  wood_id: Option[ String ],
+  geometry: Geometry,
+  wood_id: Option[String],
   tunnus: String,
   kunta: String,
   alue: String,
@@ -26,12 +26,10 @@ case class Pile(id: Option[PileId],
   pinta_ala: String,
   ryhma: String,
   luokka: String,
-  aika: Option[ String ],
-  teksti: Option[ String ],
+  aika: Option[String],
+  teksti: Option[String],
   ownerId: UserId,
-  fileName: String
-  ) extends WithId[PileId]
-
+  fileName: String) extends WithId[PileId]
 
 ///   val pile = Pile (None,
 ///     feature.getAttribute(0).asInstanceOf[ Geometry ],
@@ -52,14 +50,11 @@ case class Pile(id: Option[PileId],
 ///     file.getName()
 ///   )
 
-
-
-
 trait PilesComponent extends WithMyDriver {
   import driver.simple._
 
   class Piles(tag: Tag) extends IdTable[PileId, Pile](tag, "WOODS") {
-    def wkb_geometry = column[Geometry]("the_geom")
+    def geometry = column[Geometry]("the_geom")
     def wood_id = column[Option[String]]("wood_id")
     def tunnus = column[String]("tunnus")
     def kunta = column[String]("kunta")
@@ -67,20 +62,21 @@ trait PilesComponent extends WithMyDriver {
     def lohko = column[String]("lohko")
     def mts = column[String]("mts")
     def kuvio = column[String]("kuvio")
-    def alakuvio = column[Option[ String ]]("alakuvio")
+    def alakuvio = column[Option[String]]("alakuvio")
     def pinta_ala = column[String]("pinta_ala")
     def ryhma = column[String]("ryhma")
     def luokka = column[String]("luokka")
-    def aika = column[Option[ String ]]("aika")
-    def teksti = column[Option[ String ]]("teksti")
+    def aika = column[Option[String]]("aika")
+    def teksti = column[Option[String]]("teksti")
 
     def ownerId = column[UserId]("owner")
     def owner = foreignKey("PILE_OWNER_FK", ownerId, UsersComponent.users)(_.id)
 
     def fileName = column[String]("ORIG_FILENAME")
 
-    def * = (id.?, wkb_geometry, wood_id, tunnus, kunta, alue, lohko, mts, kuvio, alakuvio, pinta_ala,
+    def * = (id.?, geometry, wood_id, tunnus, kunta, alue, lohko, mts, kuvio, alakuvio, pinta_ala,
       ryhma, luokka, aika, teksti, ownerId, fileName) <> (Pile.tupled, Pile.unapply)
+
   }
 
 }
