@@ -5,6 +5,7 @@ import models.current.dao.Piles  // Table
 
 import play.api.db.slick.DB
 import play.api.Play.current
+import play.api.libs.json._
 
 import org.virtuslab.unicorn.UnicornPlay._
 import org.virtuslab.unicorn.UnicornPlay.driver.simple._
@@ -45,10 +46,10 @@ object PilesRepository extends PilesRepository {
         .map(t => t)
   }
 
-  def asGeoJSON(pileId: PileId): Option[String] = DB.withSession{
+  def asGeoJSON(pileId: PileId): Option[JsValue] = DB.withSession{
     implicit session: Session =>
       val geojson = piles.filter(_.id === pileId).map(_.geometry.asGeoJSON())
-      geojson.firstOption
+      geojson.firstOption.map(e => Json.toJson(e))
   }
 
   def geomByOwnerId(userId: UserId): Seq[String] = DB.withSession{
