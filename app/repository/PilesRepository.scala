@@ -46,10 +46,15 @@ object PilesRepository extends PilesRepository {
         .map(t => t)
   }
 
-  def asGeoJSON(pileId: PileId): Option[JsValue] = DB.withSession{
+  def asGeoJSON(pileId: PileId): Option[(JsValue, JsObject)] = DB.withSession{
     implicit session: Session =>
-      val geojson = piles.filter(_.id === pileId).map(_.geometry.asGeoJSON())
-      geojson.firstOption.map(e => Json.toJson(e))
+      val query = piles.filter(_.id === pileId).map(e => ( e.geometry.asGeoJSON(), e ))
+      /*
+       * first element of the tuple is the geometry json value
+       * second element is the properties of the json as defined in  the toJSON method of the Pile class
+       */
+      val result = query.firstOption.map(e  => (Json.toJson(e._1), e._2.toJSON))
+      result
   }
 
   def geomByOwnerId(userId: UserId): Seq[( String, Pile )] = DB.withSession{

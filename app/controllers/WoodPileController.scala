@@ -33,12 +33,6 @@ object WoodPileController extends Controller {
     Ok(views.html.upload())
   }
 
-  def geomAsGeoJSON(id: Long) = Action {
-    implicit request =>
-      val pileJSON = PilesRepository.asGeoJSON(PileId(id)).getOrElse(Json.obj("response" -> 404))
-      Ok(pileJSON).as("application/json")
-  }
-
   def geomByOwerIdAsGeoJSON(ownerId: Long) = Action {
     implicit request =>
       val list: Seq[(String, Pile)] = PilesRepository.geomByOwnerId(UserId(ownerId))
@@ -57,12 +51,11 @@ object WoodPileController extends Controller {
 
   def pileDataAsGeoJSON(id: Long) = Action {
     implicit request =>
-      val geometry = PilesRepository.asGeoJSON(PileId(id)).getOrElse(Json.obj("response" -> 404))
-      val pile = PilesRepository.getPileById(PileId(id))
+      val result  = PilesRepository.asGeoJSON(PileId(id))
 
-      val properties = pile match {
-        case None => Json.obj("response" -> 404)
-        case _ => pile.get.toJSON
+      val (geometry, properties) = result match {
+        case None => (Json.obj(), Json.obj())
+        case _ => (result.get._1, result.get._2)
       }
 
       val geojson = Json.obj("type" -> "Feature",
