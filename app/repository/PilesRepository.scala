@@ -52,16 +52,9 @@ object PilesRepository extends PilesRepository {
       geojson.firstOption.map(e => Json.toJson(e))
   }
 
-  def geomByOwnerId(userId: UserId): Seq[String] = DB.withSession{
+  def geomByOwnerId(userId: UserId): Seq[( String, Pile )] = DB.withSession{
     implicit session: Session =>
-      val query = piles.filter(_.ownerId === userId).map(_.geometry.asGeoJSON())
+      val query = piles.filter(_.ownerId === userId).map(e => (e.geometry.asGeoJSON(), e))
       query.list
   }
-
-  def __geomByOwnerIdTesting(userId: UserId)  = DB.withSession{
-    implicit session: Session =>
-      val query = piles.filter(_.ownerId === userId).map(e => ( e.geometry.asGeoJSON(), e.wood_id, e.tunnus  ))
-      query.list
-  }
-
 }
