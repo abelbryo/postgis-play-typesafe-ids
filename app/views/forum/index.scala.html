@@ -1,0 +1,38 @@
+@(forumForm: Form[controllers.ForumController.ForumHelper], messageForm: Form[controllers.ForumController.MessageHelper])
+
+@main("Forum index"){
+
+
+    <h1>Forum</h1>        
+
+    @helper.form(action=routes.ForumController.submitForum()){
+
+        @helper.inputText(forumForm("name"))
+
+        <button type="Submit">Submit</button>
+    }
+
+    <hr />
+
+
+    <h1>Message</h1>        
+
+
+    @helper.form(action=routes.ForumController.submitMessage()){
+
+        @helper.inputText(messageForm("user_id"), 'placeholder -> "User Id ")
+        @helper.inputText(messageForm("reply_to"), 'placeholder -> "Parent Message")
+        @helper.inputText(messageForm("title"),'placeholder -> "Title" )
+        @helper.inputText(messageForm("body"), 'placeholder -> "Body")
+
+        <button type="Submit">Submit</button>
+    }
+        
+        
+        
+        
+
+    
+
+
+}
